@@ -23,7 +23,6 @@ venv.bak/
 # ========================
 chroma_db/
 chroma_storage/
-vector_store/
 .chroma/
 *.sqlite3
 *.db
