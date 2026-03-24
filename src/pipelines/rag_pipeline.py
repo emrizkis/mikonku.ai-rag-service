@@ -12,15 +12,20 @@ class RAGPipeline:
         self.embedder = embedder
         self.llm = llm
 
-    def ask(self, question: str, user_id: str = None) -> Any:
+    def ask(self, question: str, user_id: str = None, group_id: str = None) -> Any:
         # 1. Retrieval: Cari data terdekat dari ChromaDB
         print(f"📖 Sedang menelototi dokumen untuk mencari info terkait '{question}'...")
         
         # [NEW] Multi-Tenancy Search Constraint
-        filter_args = {"user_id": user_id} if user_id else None
-        
+        filter_args = None
+        if user_id and group_id:
+            # Memakai operasi AND agar wajib cocok kedua KTP sekaligus!
+            filter_args = {"$and": [{"user_id": user_id}, {"group_id": group_id}]}
+        elif user_id:
+            filter_args = {"user_id": user_id}
+            
         if filter_args:
-            print(f"👁️‍🗨️ Menerapkan Mode Keamanan: Hanya mencari Dokumen Pribadi milik UUID: '{user_id}'...")
+            print(f"👁️‍🗨️ Menerapkan Mode Keamanan: Filter {filter_args}...")
             
         docs = self.vector_store.similarity_search(
             question, 

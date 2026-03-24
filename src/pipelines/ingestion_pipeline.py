@@ -19,7 +19,7 @@ class IngestionPipeline:
         self.embedder = embedder
         self.vector_store = vector_store
 
-    def run(self, file_path: str, user_id: str = None):
+    def run(self, file_path: str, user_id: str = None, group_id: str = None, doc_id: str = None):
         """
         Executes the extraction, chunking, and embedding/loading pipeline.
         """
@@ -33,11 +33,19 @@ class IngestionPipeline:
         
         # [NEW] Multi-Tenancy Identity Injection
         if user_id:
-            print(f"      -> 🔐 Menyegel seluruh {len(chunks)} vektor HANYA untuk pemilik UUID: '{user_id}'")
+            print(f"      -> 🔐 Menyegel seluruh {len(chunks)} vektor HANYA untuk pemilik UUID: '{user_id}' (Grup: '{group_id}')")
             for chunk in chunks:
                 if not getattr(chunk, 'metadata', None):
                     chunk.metadata = {}
                 chunk.metadata["user_id"] = user_id
+                
+                # Jika grup proyek juga diisi, stempel ganda!
+                if group_id:
+                    chunk.metadata["group_id"] = group_id
+                
+                # [NEW] Segel Dokumen Tunggal (Untuk Fitur Delete File CRUD)
+                if doc_id:
+                    chunk.metadata["doc_id"] = doc_id
         
         print(f"\n[3/4 & 4/4] Membangun embeddings CPU dan menyimpan ke ChromaDB Store...")
         self.vector_store.add_documents(chunks, self.embedder)

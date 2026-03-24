@@ -58,6 +58,27 @@ class IVectorStore(ABC):
         optionally constrained by a metadata filter parameter.
         """
         pass
+        
+    @abstractmethod
+    def delete_document(self, doc_id: str, user_id: str = None) -> bool:
+        """
+        Hard deletes all vector chunks associated with a precise doc_id tag.
+        """
+        pass
+        
+    @abstractmethod
+    def delete_group(self, group_id: str, user_id: str) -> bool:
+        """
+        Hard deletes all vector chunks associated with a specific workspace group tag.
+        """
+        pass
+        
+    @abstractmethod
+    def delete_user(self, user_id: str) -> bool:
+        """
+        Hard deletes all vector chunks entirely associated with a specific user account.
+        """
+        pass
 
 class ILLM(ABC):
     """Abstract interface for Large Language Models."""

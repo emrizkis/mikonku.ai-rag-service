@@ -50,3 +50,49 @@ class ChromaVectorStore(IVectorStore):
             )
             
         return self._langchain_chroma.similarity_search(query, k=k, filter=filter_dict)
+
+    def delete_document(self, doc_id: str, user_id: str = None) -> bool:
+        """
+        Hard deletes all chunks of a specific document from ChromaDB physically.
+        """
+        if not self._langchain_chroma:
+            print("Penyimpanan kosong, tidak ada yang dihapus.")
+            return False
+            
+        where_filter = {"doc_id": doc_id}
+        if user_id:
+            where_filter = {"$and": [{"doc_id": doc_id}, {"user_id": user_id}]}
+            
+        # Target langsung koleksi native di bawah kap engine LangChain
+        self._langchain_chroma._collection.delete(where=where_filter)
+        print(f"♻️ Berhasil membakar vektor secara fisik untuk dokumen: {doc_id}")
+        return True
+
+    def delete_group(self, group_id: str, user_id: str) -> bool:
+        """
+        Hard deletes all chunks of an entire workspace group from ChromaDB physically.
+        """
+        if not self._langchain_chroma:
+            print("Penyimpanan kosong, tidak ada yang dihapus.")
+            return False
+            
+        # Wajib menyertakan user_id sebagai pengaman Authorization lapis pertama
+        where_filter = {"$and": [{"group_id": group_id}, {"user_id": user_id}]}
+            
+        self._langchain_chroma._collection.delete(where=where_filter)
+        print(f"💣 Berhasil membumihanguskan massal seluruh vektor Grup Workspace: {group_id}")
+        return True
+
+    def delete_user(self, user_id: str) -> bool:
+        """
+        Hard deletes all chunks belonging to an entire user from ChromaDB physically.
+        """
+        if not self._langchain_chroma:
+            print("Penyimpanan kosong, tidak ada yang dihapus.")
+            return False
+            
+        where_filter = {"user_id": user_id}
+            
+        self._langchain_chroma._collection.delete(where=where_filter)
+        print(f"☢️ Berhasil MENGHANGUSKAN KIAMAT seluruh rekam jejak vektor User: {user_id}")
+        return True
