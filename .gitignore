@@ -1,0 +1,75 @@
+# ========================
+# Python Core
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ========================
+# Lingkungan Virtual (VENV)
+# ========================
+env/
+venv/
+.env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ========================
+# Database & Cache Vektor (Vector DB)
+# ========================
+chroma_db/
+chroma_storage/
+vector_store/
+.chroma/
+*.sqlite3
+*.db
+
+# ========================
+# Rahasia Kredensial (Secrets)
+# ========================
+.env
+.env.local
+.env.*.local
+secrets.json
+
+# ========================
+# Temporary Files (FastAPI Uploads dll)
+# ========================
+tmp_*
+*.tmp
+*.pdf
+testing*.pdf
+uploads/
+temp/
+logs/
+*.log
+
+# ========================
+# AI/ML Model Cache (HuggingFace dll)
+# ========================
+.cache/
+huggingface/
+.huggingface/
+*.bin
+*.pt
+*.safetensors
+*.onnx
+
+# ========================
+# Konfigurasi IDE / Editor
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ========================
+# Podman / Docker
+# ========================
+# Jaga-jaga jika ada folder mounting lokal
+hf_cache/
